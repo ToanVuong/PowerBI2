@@ -221,7 +221,7 @@ Store Count = DISTINCTCOUNT([LocationID])
 This page provides an executive overview of store sales performance, including total sales, chain contribution, district-level trend, geographic store distribution, and district efficiency using Sales Per Sq Ft.
 
 <p align="center">
-  <img src="Store Sales Overview.png" alt="Store Sales Overview" width="92%">
+  <img src="Store Sales Overview.jpg" alt="Store Sales Overview" width="92%">
 </p>
 
 ### 2️⃣ New Stores Dashboard
@@ -249,7 +249,7 @@ This page compares This Year vs Last Year monthly sales, total variance %, avera
 This detailed view ranks categories based on total sales, helping identify the strongest merchandising groups.
 
 <p align="center">
-  <img src="Total Sales by Category.jpg" alt="Total Sales by Category" width="92%">
+  <img src="Total Sales by Category.png" alt="Total Sales by Category" width="92%">
 </p>
 
 ### 6️⃣ Detailed Info – Total Units by Store Name
