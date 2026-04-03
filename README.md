@@ -1,203 +1,212 @@
 <div align="center">
 
-# 📊 Superstore Business Insights Dashboard
+# 🏬 Store Sales Report Dashboard
 
-### Power BI Project | Sales, Profit, Market, Product & Employee Performance Analysis
+### Power BI Project | Retail Store Performance, Sales Variance, Units, Margin & New Store Analysis
 
 </div>
 
 ---
 
 ## ✨ Project Summary
-This Power BI project analyzes the **Superstore** dataset to deliver actionable insights across **sales**, **profit**, **profit margin**, **orders**, **returns**, **products**, **markets**, and **employee performance**.
+This Power BI project analyzes **retail store sales performance** across stores, chains, categories, districts, and time periods.
 
-The report is designed to help business users:
-- 📈 Track KPI performance over time
-- 🔁 Compare current results with last year
-- 🌍 Analyze market and country performance
-- 🛍️ Evaluate product profitability and return behavior
-- 👥 Assess employee sales contribution
-- 💡 Identify opportunities for operational improvement
+The dashboard focuses on comparing **This Year vs Last Year** performance, tracking **new store expansion**, and evaluating operational KPIs such as:
+- 💰 Total Sales
+- 📦 Total Units
+- 📉 Sales Variance
+- 🧾 Gross Margin
+- 📏 Sales Per Sq Ft
+- 🏬 Store Count
+- 🆕 New Store Count
+- 💲 Average Unit Price
+
+The report is designed to help business users understand store-level performance, identify growth opportunities, and monitor retail efficiency across locations.
 
 ---
 
 ## 🎯 Objectives
-- Monitor key KPIs such as **Sales**, **Profit**, **Profit Margin**, **Orders**, and **Return Rate**
-- Perform **year-over-year (YoY)** comparison using time intelligence measures
-- Explore performance by **market**, **country**, **region**, **segment**, and **category**
-- Detect high-sales but low-margin products
-- Analyze return patterns across markets and categories
-- Evaluate employee contribution by person and market
+- Monitor core retail KPIs such as **Sales**, **Units**, **Gross Margin**, and **Store Count**
+- Compare **This Year** and **Last Year** results using scenario-based measures
+- Analyze **sales variance** by month, category, district, and store
+- Track the performance and contribution of **new stores**
+- Evaluate store productivity using **Sales Per Sq Ft** and **Average Selling Area Size**
+- Identify top-performing chains, stores, and product categories
 
 ---
 
 ## ❓ Business Questions
 This dashboard helps answer the following questions:
 
-- What is the overall business performance of Superstore?
-- How do **Sales**, **Profit**, and **Orders** compare with last year?
-- Which markets and countries contribute the most to revenue and profit?
-- Which products or subcategories drive the highest sales?
-- Which products have weak or negative profitability?
-- What is the return rate, and where are returns concentrated?
-- Which employees perform best in sales and profit contribution?
-- For a selected customer, which country generates the highest sales?
+- What is the overall store sales performance this year?
+- How do **This Year Sales** compare with **Last Year Sales**?
+- What is the total sales variance in value and percentage?
+- How are sales distributed across categories, chains, districts, and stores?
+- Which stores generate the highest sales and unit volume?
+- How many new stores were opened, and how are they performing?
+- What is the average selling area size, and how efficiently is space being used?
+- What are the trends in monthly sales variance and gross margin?
 
 ---
 
 ## 🗂️ Dataset Description
-The report is built on a Superstore-style business dataset with the following main tables:
+The report is built on a retail sales data model with the following main entities:
 
-- **Orders**
-- **Returns**
-- **dimDate**
+- **Store**
+- **Sales**
 
 ### 🔑 Key Fields Used
-- `Orders[Sales]`
-- `Orders[Profit]`
-- `Orders[Order ID]`
-- `Orders[Customer ID]`
-- `Orders[Country]`
-- `Returns[Order ID]`
-- `dimDate[Date]`
+- `Store[Store Type]`
+- `Store[StoreNumberName]`
+- `Store[OpenDate]`
+- `Store[SellingAreaSize]`
+- `Sales[ScenarioID]`
+- `Sales[LocationID]`
+- `Sales[MonthID]`
+- Sales value and units fields such as:
+  - `Sum_Regular_Sales_Dollars`
+  - `Sum_Markdown_Sales_Dollars`
+  - `Sum_GrossMarginAmount`
+  - `Sum_Regular_Sales_Units`
+  - `Sum_Markdown_Sales_Units`
 
 ---
 
 ## 🧩 Data Model
-The report uses a model centered around:
-- A transactional **Orders** table
-- A **Returns** table for returned orders
-- A **Date dimension** table for time intelligence calculations
+The dashboard appears to use:
+- A **Store** table for store information, store type, open date, and selling area
+- A **Sales** table for transaction/aggregate retail performance
+- Scenario-based logic where:
+  - `ScenarioID = 1` → **This Year**
+  - `ScenarioID = 2` → **Last Year**
 
 This structure supports analysis by:
-- ⏳ Time
-- 🛒 Product
-- 🌍 Geography
-- 👤 Customer
-- 👥 Employee
-- 🔁 Return behavior
+- ⏳ Time (Fiscal Month)
+- 🏬 Store / Chain / District
+- 🛍️ Category
+- 🆕 Store Type (New Store / Same Store)
+- 📍 Geography / Postal Code
 
 ---
 
 ## 📐 Key DAX Measures
 
 <details>
-<summary><b>📌 Core KPI Measures</b></summary>
+<summary><b>🏬 Store Measures</b></summary>
 
 ```DAX
-Total Sales = SUM(Orders[Sales])
+Average Selling Area Size = AVERAGE([SellingAreaSize])
 
-Total Profit = SUM(Orders[Profit])
+New Stores =
+CALCULATE(
+    COUNTA([Store Type]),
+    FILTER(ALL(Store), [Store Type] = "New Store")
+)
 
-Total Order = DISTINCTCOUNT(Orders[Order ID])
+New Stores Target = 14
 
-Total Return = DISTINCTCOUNT(Returns[Order ID])
+Total Stores = COUNTA([StoreNumberName])
 
-Profit Margin = DIVIDE([Total Profit], [Total Sales])
+Open Store Count = COUNTA([OpenDate])
 
-Return rate = DIVIDE(DISTINCTCOUNT(Returns[Order ID]), [Total Order])
+Count of OpenDate = COUNTA('Store'[OpenDate])
 ```
 
 </details>
 
 <details>
-<summary><b>📅 Time Intelligence Measures</b></summary>
+<summary><b>💰 Sales & Margin Measures</b></summary>
 
 ```DAX
-Revenue LY =
+Regular_Sales_Dollars = SUM([Sum_Regular_Sales_Dollars])
+
+Markdown_Sales_Dollars = SUM([Sum_Markdown_Sales_Dollars])
+
+TotalSales = [Regular_Sales_Dollars] + [Markdown_Sales_Dollars]
+
+TotalSalesTY = CALCULATE([TotalSales], Sales[ScenarioID] = 1)
+
+TotalSalesLY = CALCULATE([TotalSales], Sales[ScenarioID] = 2)
+
+This Year Sales = [TotalSalesTY]
+
+Last Year Sales = [TotalSalesLY]
+
+Total Sales Var = [TotalSalesTY] - [TotalSalesLY]
+
+Total Sales Var % =
+IF(
+    [TotalSalesLY] <> 0,
+    [Total Sales Var] / [TotalSalesLY],
+    BLANK()
+)
+
+Total Sales Variance = [Total Sales Var]
+
+Total Sales Variance % = [Total Sales Var %]
+
+Gross Margin This Year =
 CALCULATE(
-    [Total Sales],
-    SAMEPERIODLASTYEAR(dimDate[Date])
+    SUM([Sum_GrossMarginAmount]),
+    Sales[ScenarioID] = 1
 )
 
-YoY % = DIVIDE([Total Sales] - [Revenue LY], [Revenue LY], 0)
+Gross Margin This Year % = [Gross Margin This Year] / [TotalSalesTY]
 
-Profit LY =
+Gross Margin Last Year =
 CALCULATE(
-    [Total Profit],
-    SAMEPERIODLASTYEAR(dimDate[Date])
+    SUM([Sum_GrossMarginAmount]),
+    Sales[ScenarioID] = 2
 )
 
-YoY % Profit = DIVIDE([Total Profit] - [Profit LY], [Profit LY], 0)
-
-Order LY =
-CALCULATE(
-    [Total Order],
-    SAMEPERIODLASTYEAR(dimDate[Date])
-)
-
-Return rate LY =
-CALCULATE(
-    [Return rate],
-    SAMEPERIODLASTYEAR(dimDate[Date])
-)
-
-Revenue 3M Avg =
-AVERAGEX(
-    DATESINPERIOD(dimDate[Date], MAX(dimDate[Date]), -3, MONTH),
-    [Total Sales]
-)
-
-Profit Margin SPLY =
-CALCULATE(
-    [Profit Margin],
-    SAMEPERIODLASTYEAR(dimDate[Date])
-)
+Gross Margin Last Year % = [Gross Margin Last Year] / [TotalSalesLY]
 ```
 
 </details>
 
 <details>
-<summary><b>🚀 Advanced Measures</b></summary>
+<summary><b>📦 Unit Measures</b></summary>
 
 ```DAX
-Top Country by Sales =
-VAR _Customer = SELECTEDVALUE('Orders'[Customer ID])
-VAR _Table =
-    SUMMARIZE(
-        FILTER(
-            ALL('Orders'),
-            'Orders'[Customer ID] = _Customer
-        ),
-        'Orders'[Country],
-        "SalesAmt", [Total Sales]
-    )
-VAR _TopCountry =
-    TOPN(1, _Table, [SalesAmt], DESC)
-RETURN
-    MAXX(_TopCountry, 'Orders'[Country])
+Regular_Sales_Units = SUM([Sum_Regular_Sales_Units])
 
-Sales of Top Country =
-VAR _TopCountry = [Top Country by Sales]
-RETURN
-CALCULATE(
-    [Total Sales],
-    'Orders'[Country] = _TopCountry
+Markdown_Sales_Units = SUM([Sum_Markdown_Sales_Units])
+
+TotalUnits = [Regular_Sales_Units] + [Markdown_Sales_Units]
+
+Total Units This Year = CALCULATE([TotalUnits], Sales[ScenarioID] = 1)
+
+Total Units Last Year = CALCULATE([TotalUnits], Sales[ScenarioID] = 2)
+
+Avg $/Unit TY =
+IF(
+    [Total Units This Year] <> 0,
+    [TotalSalesTY] / [Total Units This Year],
+    BLANK()
 )
 
-Profit of Top Country =
-VAR _TopCountry = [Top Country by Sales]
-RETURN
-CALCULATE(
-    [Total Profit],
-    'Orders'[Country] = _TopCountry
+Avg $/Unit LY =
+IF(
+    [Total Units Last Year] <> 0,
+    [TotalSalesLY] / [Total Units Last Year],
+    BLANK()
 )
 
-Profit Margin of Top Country =
-DIVIDE(
-    [Profit of Top Country],
-    [Sales of Top Country]
-)
+Average Unit Price = [Avg $/Unit TY]
 
-Total Order of Top Country =
-VAR _TopCountry = [Top Country by Sales]
-RETURN
-CALCULATE(
-    [Total Order],
-    'Orders'[Country] = _TopCountry
-)
+Average Unit Price Last Year = [Avg $/Unit LY]
+```
 
-Zero Target = 0
+</details>
+
+<details>
+<summary><b>📏 Productivity Measures</b></summary>
+
+```DAX
+Sales Per Sq Ft =
+([TotalSalesTY] / (DISTINCTCOUNT([MonthID]) * SUM(Store[SellingAreaSize]))) * 12
+
+Store Count = DISTINCTCOUNT([LocationID])
 ```
 
 </details>
@@ -206,116 +215,125 @@ Zero Target = 0
 
 ## 🖼️ Report Preview
 
-> **Note:** The screenshots below use the current file names you provided. If you later move them into an `images/` folder, just update the paths in this README.
+> **Note:** The screenshots below use the current file names you uploaded. If you later move them into an `images/` folder, simply update the image paths in this README.
 
-### 1️⃣ Executive Overview
-High-level summary of sales, profit, customer base, orders, market contribution, and key business observations.
+### 1️⃣ Store Sales Overview
+This page provides an executive overview of store sales performance, including total sales, chain contribution, district-level trend, geographic store distribution, and district efficiency using Sales Per Sq Ft.
 
 <p align="center">
-  <img src="image.jpg" alt="Executive Overview" width="92%">
+  <img src="image%20%284%29.png" alt="Store Sales Overview" width="92%">
 </p>
 
-### 2️⃣ Business Insights Dashboard
-Tracks core KPIs and business performance trends by quarter, market, segment, category, and top product subcategories.
+### 2️⃣ New Stores Dashboard
+This page focuses on new store performance with a gauge for This Year Sales, comparison against Last Year Sales, monthly trend, and detailed drill-down by chain and store.
 
 <p align="center">
-  <img src="image%20%2811%29.png" alt="Business Insights Dashboard" width="92%">
+  <img src="image%20%282%29.png" alt="New Stores Dashboard" width="92%">
 </p>
 
-### 3️⃣ Product Insights Dashboard
-Focuses on product performance, profitability, monthly trend, subcategory analysis, and the distribution of sales vs. profit.
+### 3️⃣ New Stores Variance View
+This view highlights Total Sales Variance % by Fiscal Month using a waterfall chart, helping users quickly spot improvement and decline periods.
 
 <p align="center">
-  <img src="image%20%2814%29.png" alt="Product Insights Dashboard" width="92%">
+  <img src="image%20%281%29.png" alt="New Stores Variance View" width="92%">
 </p>
 
-### 4️⃣ Market Insights Dashboard
-Explores customer, market, country, region, return, and profitability performance across geographies.
+### 4️⃣ District Monthly Sales Dashboard
+This page compares This Year vs Last Year monthly sales, total variance %, average price per unit, and performance by category and chain/store.
 
 <p align="center">
-  <img src="image%20%2813%29.png" alt="Market Insights Dashboard" width="92%">
+  <img src="image.png" alt="District Monthly Sales Dashboard" width="92%">
 </p>
 
-### 5️⃣ Employee Insights Dashboard
-Analyzes employee-level sales, profit, YoY performance, and return rate contribution by market.
+### 5️⃣ Detailed Info – Total Sales by Category
+This detailed view ranks categories based on total sales, helping identify the strongest merchandising groups.
 
 <p align="center">
-  <img src="image%20%2815%29.png" alt="Employee Insights Dashboard" width="92%">
+  <img src="image.jpg" alt="Total Sales by Category" width="92%">
+</p>
+
+### 6️⃣ Detailed Info – Total Units by Store Name
+This detailed view shows the highest-performing stores by total units sold.
+
+<p align="center">
+  <img src="image%20%283%29.png" alt="Total Units by Store Name" width="92%">
 </p>
 
 ---
 
 ## 🔍 Key Insights
-Based on the dashboard screenshots and measures:
+Based on the dashboard screenshots and DAX measures, several insights can be derived:
 
-- 💰 Total sales are approximately **$13M**
-- 📈 Total profit is around **$1M**
-- 📊 Overall **profit margin** is about **11.61%**
-- 🧾 Total orders reached approximately **25K**
-- 🔁 Overall **return rate** is around **4.68%**
-- 👤 The business serves approximately **1.59K customers**
-- 🌎 The company operates across **seven markets**: APAC, EU, US, LATAM, EMEA, Africa, and Canada
-- 📱 **Phones** appear to be among the top-selling subcategories
-- ⚠️ Some products generate strong sales but weak or negative margins
-- 🧠 Employee performance differs significantly across markets and individuals
+- 💰 The dashboard tracks **This Year Sales**, **Last Year Sales**, and their **variance** in both value and percentage
+- 🆕 New stores are explicitly monitored, with a defined **New Stores Target = 14**
+- 🏬 The overview page shows total sales of approximately **$22M** for the current year
+- 🧭 Sales performance is analyzed by **chain**, **district**, **store**, **category**, and **postal code**
+- 📦 Unit-based analysis helps identify stores with the strongest sales volume contribution
+- 📉 Variance analysis reveals which months or stores are underperforming compared with last year
+- 📏 Productivity metrics such as **Sales Per Sq Ft** and **Average Selling Area Size** support operational efficiency analysis
+- 💲 Average unit price measures help evaluate pricing and product mix changes over time
 
 ---
 
 ## ✅ Recommendations
-1. **Improve profitability**
-   - Review products with high sales but low or negative profit margin
-   - Reassess pricing, discounting, and fulfillment costs
+1. **Prioritize underperforming months and districts**
+   - Investigate months with negative sales variance
+   - Review district-level issues such as demand, staffing, promotion, or inventory
 
-2. **Reduce return rate**
-   - Investigate categories and markets with high returns
-   - Identify root causes such as product quality, shipping issues, or customer mismatch
+2. **Track new store ramp-up performance closely**
+   - Compare new stores against target and expected maturity curve
+   - Identify stores that require marketing or operational support after launch
 
-3. **Strengthen high-performing markets**
-   - Prioritize markets with strong sales growth and healthy margins
-   - Replicate successful practices in weaker regions
+3. **Improve store productivity**
+   - Use **Sales Per Sq Ft** to benchmark stores and districts
+   - Reallocate floor space toward high-performing categories where appropriate
 
-4. **Optimize product portfolio**
-   - Focus on top-performing subcategories
-   - Reevaluate low-margin, high-return products
+4. **Refine merchandising strategy**
+   - Focus on top-performing categories and chains
+   - Review weak categories with declining variance or low unit productivity
 
-5. **Use employee insights for performance coaching**
-   - Benchmark top performers
-   - Share selling strategies across teams
+5. **Monitor pricing and margin dynamics**
+   - Compare average unit price and gross margin over time
+   - Investigate whether growth is driven by volume, markdowns, or true value increase
 
 ---
 
 ## 🛠️ Tools & Technologies
 - **Power BI Desktop**
 - **DAX**
-- **Power Query**
 - **Data Modeling**
-- **Superstore Dataset**
+- **Retail Sales Dataset**
+- **Store & Sales Scenario Analysis**
 
 ---
 
 ## 🧠 Skills Demonstrated
-- Dashboard design and storytelling
-- KPI modeling
-- Time intelligence with DAX
-- Product performance analysis
-- Market and geographic analysis
-- Return analysis
-- Employee performance tracking
-- Business insight communication
+- Retail KPI dashboard development
+- Scenario-based analysis (This Year vs Last Year)
+- Sales variance analysis
+- Gross margin analysis
+- Store productivity analysis
+- Geographic and district performance analysis
+- Category and store ranking analysis
+- Dashboard storytelling and business insight communication
 
 ---
 
 ## 🚀 How to Use
 1. Open the `.pbix` file in **Power BI Desktop**
-2. Refresh the dataset if necessary
-3. Navigate through the report pages
-4. Use filters/slicers such as:
-   - Year
-   - Person
-   - Market
-   - Country
+2. Refresh the dataset if needed
+3. Navigate through report pages such as:
+   - Store Sales Overview
+   - New Stores
+   - District Monthly Sales
+   - Detailed Info
+4. Use available filters/drill-downs to analyze by:
+   - Fiscal Month
+   - Chain
+   - District
+   - Store Name
    - Category
-   - Customer
+   - Store Type
 
 ---
 
@@ -326,5 +344,5 @@ Based on the dashboard screenshots and measures:
 
 ## 📝 Notes
 - This project is intended for **portfolio** and **learning** purposes.
-- Some values in the screenshots may vary depending on filters and page interactions.
-- If you rename or move the image files, remember to update the image paths in `README.md`.
+- The screenshots show multiple analytical views including overview, variance tracking, district analysis, and detailed ranking.
+- If you rename or move image files, remember to update the paths in `README.md`.
