@@ -221,42 +221,42 @@ Store Count = DISTINCTCOUNT([LocationID])
 This page provides an executive overview of store sales performance, including total sales, chain contribution, district-level trend, geographic store distribution, and district efficiency using Sales Per Sq Ft.
 
 <p align="center">
-  <img src="image%20%284%29.png" alt="Store Sales Overview" width="92%">
+  <img src="Store Sales Overview.png" alt="Store Sales Overview" width="92%">
 </p>
 
 ### 2️⃣ New Stores Dashboard
 This page focuses on new store performance with a gauge for This Year Sales, comparison against Last Year Sales, monthly trend, and detailed drill-down by chain and store.
 
 <p align="center">
-  <img src="image%20%282%29.png" alt="New Stores Dashboard" width="92%">
+  <img src="New Stores Dashboard.png" alt="New Stores Dashboard" width="92%">
 </p>
 
 ### 3️⃣ New Stores Variance View
 This view highlights Total Sales Variance % by Fiscal Month using a waterfall chart, helping users quickly spot improvement and decline periods.
 
 <p align="center">
-  <img src="image%20%281%29.png" alt="New Stores Variance View" width="92%">
+  <img src="New Stores Variance View.png" alt="New Stores Variance View" width="92%">
 </p>
 
 ### 4️⃣ District Monthly Sales Dashboard
 This page compares This Year vs Last Year monthly sales, total variance %, average price per unit, and performance by category and chain/store.
 
 <p align="center">
-  <img src="image.png" alt="District Monthly Sales Dashboard" width="92%">
+  <img src="District Monthly Sales Dashboard.png" alt="District Monthly Sales Dashboard" width="92%">
 </p>
 
 ### 5️⃣ Detailed Info – Total Sales by Category
 This detailed view ranks categories based on total sales, helping identify the strongest merchandising groups.
 
 <p align="center">
-  <img src="image.jpg" alt="Total Sales by Category" width="92%">
+  <img src="Total Sales by Category.jpg" alt="Total Sales by Category" width="92%">
 </p>
 
 ### 6️⃣ Detailed Info – Total Units by Store Name
 This detailed view shows the highest-performing stores by total units sold.
 
 <p align="center">
-  <img src="image%20%283%29.png" alt="Total Units by Store Name" width="92%">
+  <img src="Total Units by Store Name.png" alt="Total Units by Store Name" width="92%">
 </p>
 
 ---
