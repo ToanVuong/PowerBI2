@@ -320,7 +320,7 @@ Based on the dashboard screenshots and DAX measures, several insights can be der
 ---
 
 ## 🚀 How to Use
-1. Open the `.pbix` file in **Power BI Desktop**
+1. Open the `Store Sales.pbix` file in **Power BI Desktop**
 2. Refresh the dataset if needed
 3. Navigate through report pages such as:
    - Store Sales Overview
